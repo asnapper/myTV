@@ -19,6 +19,7 @@
     "babel-cli": "^6.26.0",
     "cheerio": "^1.0.0-rc.2",
     "feedparser": "^2.2.8",
-    "request": "^2.83.0"
+    "request": "^2.83.0",
+    "transmission": "^0.4.9"
   }
 }

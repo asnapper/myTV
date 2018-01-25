@@ -1,12 +1,24 @@
+import { setInterval } from 'timers';
+import Transmission from 'transmission'
+
 import { EpisodeCalendarFeed } from './lib/EpisodeCalendarFeed'
 import { TorrentSearch } from './lib/search/TorrentSearch'
 import { EzTVProvider } from './lib/search/providers/EzTVProvider'
 import { PirateBayProvider } from './lib/search/providers/PirateBayProvider'
-import { setInterval } from 'timers';
 
 const EPISODE_CALENDAR_FEED_URL = process.env.EPISODE_CALENDAR_FEED_URL || 'https://episodecalendar.com/de/rss_feed/matthias.loeffel@gmail.com'
 
 function main() {
+    const transmission = new Transmission({
+        host: 'transmission',
+        port: 9091,
+        //username: 'username',
+        //password: 'password',
+        ssl: false,
+        url: '/transmission/rpc'
+    })
+      
+
     const search = new TorrentSearch([new EzTVProvider, new PirateBayProvider])
     const calendar = new EpisodeCalendarFeed(EPISODE_CALENDAR_FEED_URL)
     const episodes = []
@@ -29,11 +41,20 @@ function main() {
                         episode.magnetLink = magnetLink
                         return episode
                     })
-                    .then(console.log)
+                    .then(episode => {
+                        transmission.addUrl(episode.magnetLink, (err, arg) => {
+                            if (err) {
+                                console.log(err)
+                                return err
+                            } else {
+                                console.log(`successfully added ${episode}`)
+                            }
+                        });
+                    })
                     .catch(error => episode.processing = false)
             })
         
-    }, process.env.TORRENT_SEARCH_INTERVAL || 10)
+    }, process.env.TORRENT_SEARCH_INTERVAL || 1000)
     calendar.fetch()
 }
 
