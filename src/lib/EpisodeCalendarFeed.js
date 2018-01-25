@@ -1,4 +1,5 @@
 import { RssFeed } from './RssFeed'
+import { Episode } from './Episode'
 
 export class EpisodeCalendarFeed extends RssFeed {
 
@@ -11,12 +12,12 @@ export class EpisodeCalendarFeed extends RssFeed {
         episodes = Array.isArray(episodes) ? episodes : [episodes]
 
         return episodes.map(rssEpisode => {
-            return {
+            return new Episode({
                 airDate: new Date(rssEpisode['air_date']['#']),
                 show: rssEpisode['show']['#'],
                 episodeNumber: rssEpisode['episode_number']['#'],
                 seasonNumber: rssEpisode['season_number']['#']
-            }
+            })
         })
     }
 }
