@@ -1,4 +1,4 @@
-import { EpisodeCalendarFeed } from './lib/EpisodeCalendar'
+import { EpisodeCalendarFeed } from './lib/EpisodeCalendarFeed'
 
 const EPISODE_CALENDAR_FEED_URL = 'https://episodecalendar.com/de/rss_feed/matthias.loeffel@gmail.com'
 
