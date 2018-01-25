@@ -20,7 +20,7 @@ function main() {
 
     setInterval(() => calendar.fetch(), process.env.RSS_FETCH_INTERVAL || 1 * 60 * 1000)
     setInterval(() => {
-        episodes.filter(episode => (episode.processing == false || !episode.processing) && !episode.magnetLink)
+        episodes.filter(episode => !episode.processing && !episode.magnetLink)
             .forEach(episode => {
                 episode.processing = true
                 search.search(`${episode}`)
