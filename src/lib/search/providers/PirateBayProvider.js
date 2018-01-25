@@ -12,8 +12,9 @@ export class PirateBayProvider {
         if (this.jobs.length > 0) {
             const job = this.jobs.pop()
             const { searchString, resolve, reject } = job
+            const url = `https://thepiratebay.org/search/${encodeURIComponent(searchString)}/0/99/0`
 
-            const req = request(`https://thepiratebay.org/search/${encodeURIComponent(searchString)}/0/99/0`, (err, httpResponse, body) => {
+            const req = request(url, (err, httpResponse, body) => {
                 const $ = cheerio.load(body)
                 const links = $('a[href]')
                     .map((index, link) => $(link).attr('href'))
@@ -28,6 +29,8 @@ export class PirateBayProvider {
                 
                 if (links.length > 0) {
                     resolve(links[0])
+                } else {
+                    setTimeout(() => reject('PirateBayProvider did not return any results'), process.env.PIRATEBAY_REJECTION_DELAY || 10 * 1000)
                 }
             })
         }

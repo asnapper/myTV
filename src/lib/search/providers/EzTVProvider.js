@@ -12,8 +12,9 @@ export class EzTVProvider {
         if (this.jobs.length > 0) {
             const job = this.jobs.pop()
             const { searchString, resolve, reject } = job
-
-            const req = request(`https://eztv.ag/search/${searchString.replace(' ', '-')}`, (err, httpResponse, body) => {
+            const url = `https://eztv.ag/search/${searchString.replace(' ', '-')}`
+            
+            const req = request(url, (err, httpResponse, body) => {
                 const $ = cheerio.load(body)
                 const links = $('a[href]')
                     .map((index, link) => $(link).attr('href'))
@@ -26,9 +27,11 @@ export class EzTVProvider {
                         }, true)
                     })
                 
-                if (links.length > 0) {
-                    resolve(links[0])
-                }
+                    if (links.length > 0) {
+                        resolve(links[0])
+                    } else {
+                        setTimeout(() => reject('EzTVProvider did not return any results'), process.env.EZTV_REJECTION_DELAY || 10 * 1000)
+                    }
             })
         }
     }
