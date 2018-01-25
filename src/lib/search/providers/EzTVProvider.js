@@ -26,8 +26,6 @@ export class EzTVProvider {
                         }, true)
                     })
                 
-                links.forEach(console.log)
-                
                 if (links.length > 0) {
                     resolve(links[0])
                 } else {
