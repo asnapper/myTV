@@ -1,11 +1,12 @@
 import { EpisodeCalendarFeed } from './lib/EpisodeCalendarFeed'
 import { TorrentSearch } from './lib/search/TorrentSearch'
 import { EzTVProvider } from './lib/search/providers/EzTVProvider'
+import { PirateBayProvider } from './lib/search/providers/PirateBayProvider'
 
 const EPISODE_CALENDAR_FEED_URL = process.env.EPISODE_CALENDAR_FEED_URL || 'https://episodecalendar.com/de/rss_feed/matthias.loeffel@gmail.com'
 
 function main() {
-    const search = new TorrentSearch([new EzTVProvider])
+    const search = new TorrentSearch([new EzTVProvider, new PirateBayProvider])
     const calendar = new EpisodeCalendarFeed(EPISODE_CALENDAR_FEED_URL)
 
     calendar.subscribe((episode) => {

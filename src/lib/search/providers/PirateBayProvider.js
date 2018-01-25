@@ -2,8 +2,8 @@ import request from 'request'
 import cheerio from 'cheerio'
 import { clearInterval, setInterval } from 'timers';
 
-export class EzTVProvider {
-    constructor(intervalTime = process.env.EZTV_INTERVAL || 1000) {
+export class PirateBayProvider {
+    constructor(intervalTime = process.env.PIRATEBAY_INTERVAL || 1000) {
         this.jobs = []
         this.interval = setInterval(this.jobHandler.bind(this), intervalTime)
     }
@@ -13,7 +13,7 @@ export class EzTVProvider {
             const job = this.jobs.pop()
             const { searchString, resolve, reject } = job
 
-            const req = request(`https://eztv.ag/search/${searchString.replace(' ', '-')}`, (err, httpResponse, body) => {
+            const req = request(`https://thepiratebay.org/search/${encodeURIComponent(searchString)}/0/99/0`, (err, httpResponse, body) => {
                 const $ = cheerio.load(body)
                 const links = $('a[href]')
                     .map((index, link) => $(link).attr('href'))
