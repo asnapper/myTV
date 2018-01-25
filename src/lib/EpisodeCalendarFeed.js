@@ -18,6 +18,6 @@ export class EpisodeCalendarFeed extends RssFeed {
                 episodeNumber: rssEpisode['episode_number']['#'],
                 seasonNumber: rssEpisode['season_number']['#']
             })
-        })
+        }).filter(episode => new Date() > episode.airDate)
     }
 }
