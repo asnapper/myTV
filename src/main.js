@@ -10,8 +10,8 @@ function main() {
 
     calendar.subscribe((episode) => {
         search.search(`${episode}`)
-            .catch(error => console.log(`${episode}`, error))
-            .then(result => console.log(`${episode}`, result))
+            .then(result => console.log(`SUCCESS: ${episode}`, result))
+            .catch(error => console.log(`ERROR: ${episode}`, error))
     })
     calendar.fetch()
 }

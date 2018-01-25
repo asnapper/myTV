@@ -1,21 +1,32 @@
 import request from 'request'
 import cheerio from 'cheerio'
+import { clearInterval, setInterval } from 'timers';
 
 export class EzTVProvider {
-    search(searchString) {
-        return new Promise((resolve, reject) => {
-            // TODO: throttle requests to eztv.ag
+    constructor(intervalTime = process.env.EZTV_INTERVAL || 1000) {
+        this.jobs = []
+        this.interval = setInterval(this.jobHandler.bind(this), intervalTime)
+    }
+
+    jobHandler() {
+        if (this.jobs.length > 0) {
+            const job = this.jobs.pop()
+            const { searchString, resolve, reject } = job
+
             const req = request(`https://eztv.ag/search/${searchString.replace(' ', '-')}`, (err, httpResponse, body) => {
                 const $ = cheerio.load(body)
                 const links = $('a[href]')
-                .map((index, link) => $(link).attr('href'))
-                .get()
-                .filter(href => href.startsWith('magnet:'))
-                .filter(href => {
-                    return searchString.split(' ').reduce((acc, val) => {
-                        return acc && href.indexOf(val) > -1
-                    }, true)
-                })
+                    .map((index, link) => $(link).attr('href'))
+                    .get()
+                    .filter(href => !!href && href.length)
+                    .filter(href => href.startsWith('magnet:'))
+                    .filter(href => {
+                        return searchString.split(' ').reduce((acc, val) => {
+                            return acc && href.indexOf(val) > -1
+                        }, true)
+                    })
+                
+                links.forEach(console.log)
                 
                 if (links.length > 0) {
                     resolve(links[0])
@@ -23,6 +34,16 @@ export class EzTVProvider {
                     reject('provider did not return any results')
                 }
             })
+        }
+    }
+
+    stop() {
+        clearInterval(this.interval)
+    }
+
+    search(searchString) {
+        return new Promise((resolve, reject) => {
+            this.jobs.push({ searchString, resolve, reject })
         })
     }
 }
