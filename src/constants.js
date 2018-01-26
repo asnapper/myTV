@@ -16,3 +16,5 @@ export const TRANSMISSION_USER = process.env.TRANSMISSION_USER
 export const TRANSMISSION_PASSWORD = process.env.TRANSMISSION_PASSWORD
 export const TRANSMISSION_SSL = process.env.TRANSMISSION_SSL ? process.env.TRANSMISSION_SSL === 'true' : false
 export const TRANSMISSION_URL = process.env.TRANSMISSION_URL || '/transmission/rpc'
+
+export const STORAGE_PATH = process.env.STORAGE_PATH || 'episodes.json'

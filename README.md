@@ -28,9 +28,9 @@ PIRATEBAY_REJECTION_DELAY # do not modify for now
 make sure you configure the download volume in ```docker-compose.yml```
 
 ## Things left to do
-- Serialize/Deserialize episode data to/from JSON file
+- ~~Serialize/Deserialize episode data to/from JSON file~~
 - ~~Graceful shutdown~~
-- Serialize on shutdown
+- ~~Serialize on shutdown~~
 - ~~Send magnet links only once to transmission daemon~~
 - ~~Unclutter main.js~~
 - Optimize ease of use
