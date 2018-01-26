@@ -4,6 +4,8 @@ export class Episode {
         this.show = data.show
         this.episodeNumber = data.episodeNumber
         this.seasonNumber = data.seasonNumber
+        this.processing = data.processing
+        this.magnetLink = data.magnetLink
     }
 
     toString() {
