@@ -8,6 +8,10 @@ import { EPISODE_CALENDAR_FEED_URL, RSS_FETCH_INTERVAL, TORRENT_SEARCH_INTERVAL,
     TORRENT_PROVIDERS, TRANSMISSION_HOST, TRANSMISSION_PORT, TRANSMISSION_USER,
     TRANSMISSION_PASSWORD, TRANSMISSION_SSL, TRANSMISSION_URL } from './constants'
 
+import { MESSAGE_INFO_STARTUP, MESSAGE_INFO_TRANSMISSION_CONFIG, MESSAGE_INFO_TRANSMISSION_ADDING,
+    MESSAGE_INFO_TRANSMISSION_ADDED, MESSAGE_INFO_SHUTDOWN, MESSAGE_INFO_BYEBYE, MESSAGE_ERROR_TRANSMISSION,
+    MESSAGE_ERROR_SHUTDOWN, MESSAGE_INFO_FOUND_EP, MESSAGE_INFO_LOOKUP_EP, logInfo, logError } from './messages'
+
 const transmissionConfig = {
     host: TRANSMISSION_HOST,
     port: TRANSMISSION_PORT,
@@ -17,8 +21,8 @@ const transmissionConfig = {
     url: TRANSMISSION_URL
 }
 
-console.log('starting myTV')
-console.log('transmission config: ', transmissionConfig)
+logInfo(MESSAGE_INFO_STARTUP)
+logInfo(MESSAGE_INFO_TRANSMISSION_CONFIG, transmissionConfig)
 
 const transmission = new Transmission(transmissionConfig)
 
@@ -28,6 +32,7 @@ const episodes = []
 
 const unsubscribeCalendar = calendar.subscribe((episode) => {
     if (!episodes.filter(ep => ep.show === episode.show && ep.seasonNumber === episode.seasonNumber && ep.episodeNumber === episode.episodeNumber).length) {
+        logInfo(MESSAGE_INFO_FOUND_EP, `${episode}`)
         episodes.push(episode)
     }
 })
@@ -45,14 +50,15 @@ const torrentInterval = setInterval(() => {
                     return episode
                 })
                 .then(episode => {
+                    logInfo(MESSAGE_INFO_TRANSMISSION_ADDING, `${episode}`)
                     transmission.addUrl(episode.magnetLink, (err, arg) => {
                         if (err) {
                             episode.sentToTransmission = false
-                            console.error("TRANSMISSION_ERROR: ", err.syscall, err.code)
+                            logError(MESSAGE_ERROR_TRANSMISSION, err)
                             return err
                         } else {
                             episode.sentToTransmission = true
-                            console.log(`successfully added ${episode}`)
+                            logInfo(MESSAGE_INFO_TRANSMISSION_ADDED, `${episode}`)
                         }
                     });
                 })
@@ -63,17 +69,17 @@ const torrentInterval = setInterval(() => {
 
 calendar.fetch()
 
-function dieGracefully() {
+function dieGracefully(signal) {
     try {
-        console.log('shutting down')
+        logInfo(MESSAGE_INFO_SHUTDOWN, signal)
         search.stop()
         unsubscribeCalendar && unsubscribeCalendar()
         clearInterval(rssInterval)
         clearInterval(torrentInterval)
-        console.log('bye bye')
+        logInfo(MESSAGE_INFO_BYEBYE)
         process.exit(0)
     } catch(e) {
-        console.error(e)
+        logError(MESSAGE_ERROR_SHUTDOWN, e)
         process.exit(1)
     }
 }
