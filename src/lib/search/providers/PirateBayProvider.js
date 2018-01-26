@@ -1,9 +1,10 @@
 import request from 'request'
 import cheerio from 'cheerio'
 import { clearInterval, setInterval } from 'timers';
+import { PIRATEBAY_INTERVAL, PIRATEBAY_REJECTION_DELAY } from '../../../constants'
 
 export class PirateBayProvider {
-    constructor(intervalTime = process.env.PIRATEBAY_INTERVAL || 1000) {
+    constructor(intervalTime = PIRATEBAY_INTERVAL) {
         this.jobs = []
         this.interval = setInterval(this.jobHandler.bind(this), intervalTime)
     }
@@ -30,7 +31,7 @@ export class PirateBayProvider {
                 if (links.length > 0) {
                     resolve(links[0])
                 } else {
-                    setTimeout(() => reject('PirateBayProvider did not return any results'), process.env.PIRATEBAY_REJECTION_DELAY || 10 * 1000)
+                    setTimeout(() => reject('PirateBayProvider did not return any results'), PIRATEBAY_REJECTION_DELAY)
                 }
             })
         }

@@ -3,10 +3,8 @@ import Transmission from 'transmission'
 
 import { EpisodeCalendarFeed } from './lib/EpisodeCalendarFeed'
 import { TorrentSearch } from './lib/search/TorrentSearch'
-import { EzTVProvider } from './lib/search/providers/EzTVProvider'
-import { PirateBayProvider } from './lib/search/providers/PirateBayProvider'
-
-const EPISODE_CALENDAR_FEED_URL = process.env.EPISODE_CALENDAR_FEED_URL || 'https://episodecalendar.com/de/rss_feed/matthias.loeffel@gmail.com'
+import { PROVIDER_MAP } from './lib/search/providers'
+import { EPISODE_CALENDAR_FEED_URL, RSS_FETCH_INTERVAL, TORRENT_SEARCH_INTERVAL, TORRENT_PROVIDERS } from './constants'
 
 function main() {
     const transmission = new Transmission({
@@ -19,7 +17,7 @@ function main() {
     })
       
 
-    const search = new TorrentSearch([new EzTVProvider, new PirateBayProvider])
+    const search = new TorrentSearch(TORRENT_PROVIDERS.map(providerName => new PROVIDER_MAP[providerName]))
     const calendar = new EpisodeCalendarFeed(EPISODE_CALENDAR_FEED_URL)
     const episodes = []
 
@@ -30,7 +28,7 @@ function main() {
         
     })
 
-    setInterval(() => calendar.fetch(), process.env.RSS_FETCH_INTERVAL || 1 * 60 * 1000)
+    setInterval(() => calendar.fetch(), RSS_FETCH_INTERVAL)
     setInterval(() => {
         episodes.filter(episode => !episode.processing && !episode.magnetLink)
             .forEach(episode => {
@@ -54,7 +52,7 @@ function main() {
                     .catch(error => episode.processing = false)
             })
         
-    }, process.env.TORRENT_SEARCH_INTERVAL || 1000)
+    }, TORRENT_SEARCH_INTERVAL)
     calendar.fetch()
 }
 

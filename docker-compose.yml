@@ -2,7 +2,9 @@ version: '3'
 services:
   episodecalendar:
     build: .
-    links:
-      - "transmission"
+    network_mode: 'host'
   transmission:
     image: linuxserver/transmission:latest
+    network_mode: 'host'
+    volumes:
+      - /c/Users/matt/Videos:/downloads

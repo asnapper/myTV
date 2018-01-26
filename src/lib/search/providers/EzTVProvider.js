@@ -1,9 +1,10 @@
 import request from 'request'
 import cheerio from 'cheerio'
 import { clearInterval, setInterval } from 'timers';
+import { EZTV_INTERVAL, EZTV_REJECTION_DELAY } from '../../../constants'
 
 export class EzTVProvider {
-    constructor(intervalTime = process.env.EZTV_INTERVAL || 1000) {
+    constructor(intervalTime = EZTV_INTERVAL) {
         this.jobs = []
         this.interval = setInterval(this.jobHandler.bind(this), intervalTime)
     }
@@ -30,7 +31,7 @@ export class EzTVProvider {
                     if (links.length > 0) {
                         resolve(links[0])
                     } else {
-                        setTimeout(() => reject('EzTVProvider did not return any results'), process.env.EZTV_REJECTION_DELAY || 10 * 1000)
+                        setTimeout(() => reject('EzTVProvider did not return any results'), EZTV_REJECTION_DELAY)
                     }
             })
         }
