@@ -9,3 +9,10 @@ export const EZTV_REJECTION_DELAY = process.env.EZTV_REJECTION_DELAY ? parseInt(
 
 export const PIRATEBAY_INTERVAL = process.env.PIRATEBAY_INTERVAL ? parseInt(process.env.PIRATEBAY_INTERVAL, 10) : 5 * 1000
 export const PIRATEBAY_REJECTION_DELAY = process.env.PIRATEBAY_REJECTION_DELAY ? parseInt(process.env.PIRATEBAY_REJECTION_DELAY, 10) : 1 * 60 * 1000
+
+export const TRANSMISSION_HOST = process.env.TRANSMISSION_HOST ? process.env.TRANSMISSION_HOST : 'transmission'
+export const TRANSMISSION_PORT = process.env.TRANSMISSION_PORT ? parseInt(process.env.TRANSMISSION_PORT, 10) : 9091
+export const TRANSMISSION_USER = process.env.TRANSMISSION_USER
+export const TRANSMISSION_PASSWORD = process.env.TRANSMISSION_PASSWORD
+export const TRANSMISSION_SSL = process.env.TRANSMISSION_SSL ? process.env.TRANSMISSION_SSL === 'true' : false
+export const TRANSMISSION_URL = process.env.TRANSMISSION_URL || '/transmission/rpc'
