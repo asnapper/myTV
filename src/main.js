@@ -1,4 +1,4 @@
-import { setInterval } from 'timers';
+import { setInterval, clearInterval } from 'timers';
 import Transmission from 'transmission'
 
 import { EpisodeCalendarFeed } from './lib/EpisodeCalendarFeed'
@@ -8,14 +8,19 @@ import { EPISODE_CALENDAR_FEED_URL, RSS_FETCH_INTERVAL, TORRENT_SEARCH_INTERVAL,
     TORRENT_PROVIDERS, TRANSMISSION_HOST, TRANSMISSION_PORT, TRANSMISSION_USER,
     TRANSMISSION_PASSWORD, TRANSMISSION_SSL, TRANSMISSION_URL } from './constants'
 
-const transmission = new Transmission({
+const transmissionConfig = {
     host: TRANSMISSION_HOST,
     port: TRANSMISSION_PORT,
     username: TRANSMISSION_USER,
     password: TRANSMISSION_PASSWORD,
     ssl: TRANSMISSION_SSL,
     url: TRANSMISSION_URL
-})
+}
+
+console.log('starting myTV')
+console.log('transmission config: ', transmissionConfig)
+
+const transmission = new Transmission(transmissionConfig)
 
 const search = new TorrentSearch(TORRENT_PROVIDERS.map(providerName => new PROVIDER_MAP[providerName]))
 const calendar = new EpisodeCalendarFeed(EPISODE_CALENDAR_FEED_URL)
@@ -28,6 +33,7 @@ const unsubscribeCalendar = calendar.subscribe((episode) => {
 })
 
 const rssInterval = setInterval(() => calendar.fetch(), RSS_FETCH_INTERVAL)
+
 const torrentInterval = setInterval(() => {
     episodes.filter(episode => !episode.processing && !episode.magnetLink && !episode.sentToTransmission )
         .forEach(episode => {
@@ -42,7 +48,7 @@ const torrentInterval = setInterval(() => {
                     transmission.addUrl(episode.magnetLink, (err, arg) => {
                         if (err) {
                             episode.sentToTransmission = false
-                            console.log(err)
+                            console.error("TRANSMISSION_ERROR: ", err.syscall, err.code)
                             return err
                         } else {
                             episode.sentToTransmission = true
@@ -54,4 +60,23 @@ const torrentInterval = setInterval(() => {
         })
     
 }, TORRENT_SEARCH_INTERVAL)
+
 calendar.fetch()
+
+function dieGracefully() {
+    try {
+        console.log('shutting down')
+        search.stop()
+        unsubscribeCalendar && unsubscribeCalendar()
+        clearInterval(rssInterval)
+        clearInterval(torrentInterval)
+        console.log('bye bye')
+        process.exit(0)
+    } catch(e) {
+        console.error(e)
+        process.exit(1)
+    }
+}
+
+process.on('SIGTERM', dieGracefully);
+process.on('SIGINT', dieGracefully);

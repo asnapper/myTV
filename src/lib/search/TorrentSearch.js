@@ -18,4 +18,8 @@ export class TorrentSearch {
     search(searchString) {
         return Promise.race(this.providers.map(provider => provider.search(searchString)))
     }
+
+    stop() {
+        this.providers.forEach(provider => provider.stop())
+    }
 }
