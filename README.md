@@ -18,7 +18,7 @@ configuration is done via docker-compose.yml environment variables
 
 | Environment variable      | Description                       | Default value              |
 | ------------------------- | --------------------------------- | -------------------------- |
-|EPISODE_CALENDAR_FEED_URL | rss feed url | https://episodecalendar.com/de/rss_feed/matthias.loeffel@gmail.com |
+|EPISODE_CALENDAR_FEED_URL | rss feed url | https://episodecalendar.com/... |
 |TORRENT_PROVIDERS | comma separated string with search providers | 'EzTVProvider,PirateBayProvider' |
 |RSS_FETCH_INTERVAL | milliseconds, how often to query rss feed | 10 * 60 * 1000 |
 |TORRENT_SEARCH_INTERVAL | milliseconds, how often to lookup magnet links | 1000 |
