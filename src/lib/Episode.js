@@ -8,7 +8,8 @@ export class Episode {
         this.magnetLink = data.magnetLink
     }
 
-    toString() {
+    toString(alternateFormat = false) {
+        let showString = `${this.show.replace('(', '').replace(')', '')}`
         let episodeString = `${this.episodeNumber}`
         let seasonString = `${this.seasonNumber}`
 
@@ -17,7 +18,10 @@ export class Episode {
         
         if (seasonString.length === 1)
             seasonString = `0${seasonString}`
-        
-        return `${this.show} S${seasonString}E${episodeString}`
+        if (alternateFormat) {
+            return `${showString} ${seasonString}x${episodeString}`
+        } else {
+            return `${showString} S${seasonString}E${episodeString}`
+        }
     }
 }

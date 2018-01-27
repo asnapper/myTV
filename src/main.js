@@ -44,7 +44,7 @@ const torrentInterval = setInterval(() => {
     episodes.filter(episode => !episode.processing && !episode.magnetLink && !episode.sentToTransmission )
         .forEach(episode => {
             episode.processing = true
-            search.search(`${episode}`)
+            search.search([`${episode}`, episode.toString(true)])
                 .then(magnetLink => {
                     episode.processing = false
                     episode.magnetLink = magnetLink
@@ -80,7 +80,7 @@ function dieGracefully(signal) {
         clearInterval(torrentInterval)
         logInfo(MESSAGE_INFO_BYEBYE)
         process.exit(0)
-    } catch(e) {
+    } catch (e) {
         logError(MESSAGE_ERROR_SHUTDOWN, e)
         process.exit(1)
     }

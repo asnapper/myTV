@@ -16,6 +16,9 @@ export class TorrentSearch {
     }
 
     search(searchString) {
+        if (Array.isArray(searchString)) {
+            return Promise.race(searchString.map(s => this.search(s)))
+        }
         return Promise.race(this.providers.map(provider => provider.search(searchString)))
     }
 
