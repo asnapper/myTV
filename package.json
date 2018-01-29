@@ -6,17 +6,18 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rm -rf dist && babel src -d dist",
-    "start": "babel-node dist/main.js"
+    "start": "node dist/main.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "babel-cli": "^6.26.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1"
   },
   "dependencies": {
-    "babel-cli": "^6.26.0",
+    "babel-register": "^6.26.0",
     "cheerio": "^1.0.0-rc.2",
     "feedparser": "^2.2.8",
     "request": "^2.83.0",
