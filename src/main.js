@@ -83,5 +83,5 @@ function dieGracefully(signal) {
     }
 }
 
-process.on('SIGTERM', dieGracefully);
-process.on('SIGINT', dieGracefully);
+process.on('SIGTERM', dieGracefully)
+process.on('SIGINT', dieGracefully)
