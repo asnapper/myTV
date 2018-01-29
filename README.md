@@ -45,3 +45,7 @@ make sure you configure the download volume in ```docker-compose.yml```
 - Optimize ease of use
 - Support more torrent backends (uTorrent)
 - Explain usage without docker/docker-compose
+
+## Legal
+
+Only use it, if it is legal in your jurisdiction and configure your torrent client accordingly (ie. disable seeding)
