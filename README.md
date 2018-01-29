@@ -43,7 +43,7 @@ make sure you configure the download volume in ```docker-compose.yml```
 - ~~Send magnet links only once to transmission daemon~~
 - ~~Unclutter main.js~~
 - Optimize ease of use
-- Support more torrent backends (uTorrent)
+- Support more torrent backends (µTorrent)
 - Explain usage without docker/docker-compose
 
 ## Legal
